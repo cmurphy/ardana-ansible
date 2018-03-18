@@ -46,3 +46,19 @@
     find_iso_marker_file_line: "Red Hat Enterprise Linux "
     find_iso_target_dir:
       "{{ PACKAGE_CONSTANTS.REPO_DIR }}/ardana/rhel7/yum/OS"
+
+- name: deployer-setup | install-isos | Get Cloud ISO path
+  find_zypper_iso:
+    name: SUSE-OPENSTACK-CLOUD-8
+  register: cloud_iso
+
+- include: "find-iso.yml"
+  vars:
+    find_iso_header: "SUSE OpenStack Cloud 8"
+    find_iso_file: "{{ cloud_iso.path }}"
+    find_iso_mount_dir: ""
+    find_iso_marker_file: "media.1/products"
+    find_iso_marker_file_line: "SOC8 8-0"
+    find_iso_target_dir:
+      "/srv/www/suse-{{ansible_distribution_version}}/Cloud"
+  when: cloud_iso.path != ''
